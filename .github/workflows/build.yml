@@ -19,10 +19,10 @@ jobs:
     timeout-minutes: 2
 
     steps:
-        - name: Enable egress filtering
-          uses: bullfrogsec/bullfrog@latest
-          with:
-            egress-policy: audit
+      - name: Enable egress filtering
+        uses: bullfrogsec/bullfrog@latest
+        with:
+          egress-policy: audit
       - name: Checkout
         uses: actions/checkout@v4
       - name: Bootstrap
@@ -188,7 +188,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update dist"
-          file_pattern: 'action/dist/*'    
+          file_pattern: "action/dist/*"
           commit_user_name: Bullfrog Bot # defaults to "github-actions[bot]"
           commit_user_email: bot@bullfrogsec.com # defaults to "41898282+github-actions[bot]@users.noreply.github.com"
           commit_author: bullfrog-bot <bot@bullfrogsec.com> # defaults to "username <username@users.noreply.github.com>", where "username" belongs to the author of the commit that triggered the run
