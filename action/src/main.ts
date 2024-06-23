@@ -159,6 +159,7 @@ async function _main() {
 
 async function main() {
   try {
+    console.log("Starting action");
     await _main();
   } catch (error: any) {
     console.error(error);
