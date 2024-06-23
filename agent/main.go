@@ -196,6 +196,7 @@ func addIpToLogs(decision string, domain string, ip string) {
 }
 
 func main() {
+	fmt.Println("Starting agent")
 	// set the mode (audit or block) based on the program argument
 	blockDNS := false
 
