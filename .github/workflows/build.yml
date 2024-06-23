@@ -42,6 +42,7 @@ jobs:
             action/dist
 
   audit:
+    needs: build
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
