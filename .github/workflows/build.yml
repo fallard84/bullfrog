@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Enable egress filtering
-        uses: bullfrogsec/bullfrog@latest
+        uses: bullfrogsec/bullfrog@v0.3
         with:
           egress-policy: audit
       - name: Checkout
@@ -174,7 +174,7 @@ jobs:
     needs: [build, audit]
     steps:
       - name: Enable egress filtering
-        uses: bullfrogsec/bullfrog@latest
+        uses: bullfrogsec/bullfrog@v0.3
         with:
           egress-policy: audit
       - name: Checkout
