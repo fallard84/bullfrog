@@ -43,13 +43,13 @@ jobs:
             agent/agent
             action/dist
 
-  audit:
+  test-audit:
     needs: build
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04]
+        os: [ubuntu-22.04]
     timeout-minutes: 2
 
     steps:
@@ -171,7 +171,7 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       contents: write
-    needs: [build, audit]
+    needs: [build, test-audit]
     steps:
       - name: Enable egress filtering
         uses: bullfrogsec/bullfrog@v0.3
@@ -193,38 +193,38 @@ jobs:
           commit_user_email: bot@bullfrogsec.com # defaults to "41898282+github-actions[bot]@users.noreply.github.com"
           commit_author: bullfrog-bot <bot@bullfrogsec.com> # defaults to "username <username@users.noreply.github.com>", where "username" belongs to the author of the commit that triggered the run
 
-
-  # release:
-  #   runs-on: ubuntu-22.04
-  #   permissions:
-  #     contents: write
-  #     pull-requests: write
-  #   needs: [build, audit]
-  #   outputs:
-  #     release_created: ${{ steps.release.outputs.release_created }}
-  #     tag_name: ${{ steps.release.outputs.tag_name }}
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: googleapis/release-please-action@v3
-  #       if: github.event_name == 'push'
-  #       id: release
-  #       with:
-  #         release-type: go
-  # publish:
-  #   runs-on: ubuntu-22.04
-  #   permissions:
-  #     contents: write
-  #     packages: write
-  #   needs: [build, audit]
-  #   # this if statements ensure that a publication only occurs when
-  #   # a new release is created:
-  #   if: ${{ needs.release.outputs.release_created }}
-  #   steps:
-  #     - uses: actions/download-artifact@v3
-  #       with:
-  #         name: agent
-  #         path: agent
-  #     - name: Upload Release Artifact
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       run: gh release upload ${{ needs.release.outputs.tag_name }} agent
+  release:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
+    needs: [build, audit]
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: googleapis/release-please-action@v3
+        if: github.event_name == 'push'
+        id: release
+        with:
+          release-type: go
+          target-branch: release
+  publish:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      packages: write
+    needs: release
+    # this if statements ensure that a publication only occurs when
+    # a new release is created:
+    if: ${{ needs.release.outputs.release_created }}
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: agent
+          path: agent
+      - name: Upload Release Artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ needs.release.outputs.tag_name }} agent
