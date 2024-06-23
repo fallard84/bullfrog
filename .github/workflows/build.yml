@@ -200,7 +200,9 @@ jobs:
         if: github.event_name == 'push'
         id: release
         with:
-          release-type: go
+          # we use node release type which will bump the changelog and package.json
+          # go release type is normally only including changelog, so it's covered
+          release-type: node
           target-branch: release
   publish:
     runs-on: ubuntu-22.04
