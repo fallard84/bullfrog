@@ -167,11 +167,15 @@ jobs:
   #           fi;
   #         "
 
-  update-dist:
+  release:
     runs-on: ubuntu-22.04
     permissions:
       contents: write
+      pull-requests: write
     needs: [build, test-audit]
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - name: Enable egress filtering
         uses: bullfrogsec/bullfrog@v0.3
@@ -189,22 +193,10 @@ jobs:
         with:
           commit_message: "chore: update dist"
           file_pattern: "action/dist/*"
-          commit_user_name: Bullfrog Bot # defaults to "github-actions[bot]"
-          commit_user_email: bot@bullfrogsec.com # defaults to "41898282+github-actions[bot]@users.noreply.github.com"
-          commit_author: bullfrog-bot <bot@bullfrogsec.com> # defaults to "username <username@users.noreply.github.com>", where "username" belongs to the author of the commit that triggered the run
-
-  release:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
-      pull-requests: write
-    needs: [build, test-audit]
-    outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: googleapis/release-please-action@v3
+          commit_user_name: Bullfrog Bot
+          commit_user_email: bot@bullfrogsec.com
+          commit_author: bullfrog-bot <bot@bullfrogsec.com>
+      - uses: googleapis/release-please-action@v4
         if: github.event_name == 'push'
         id: release
         with:
