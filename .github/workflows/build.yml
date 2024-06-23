@@ -19,14 +19,12 @@ jobs:
     timeout-minutes: 2
 
     steps:
+        - name: Enable egress filtering
+          uses: bullfrogsec/bullfrog@latest
+          with:
+            egress-policy: audit
       - name: Checkout
         uses: actions/checkout@v4
-        # with:
-        #   token: ${{ secrets.BULLFROG_BOT_PAT }}
-      - name: Enable egress filtering
-        uses: ./
-        with:
-          egress-policy: audit
       - name: Bootstrap
         run: |
           make bootstrap
@@ -169,12 +167,39 @@ jobs:
   #           fi;
   #         "
 
+  update-dist:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    needs: [build, audit]
+    steps:
+      - name: Enable egress filtering
+        uses: bullfrogsec/bullfrog@latest
+        with:
+          egress-policy: audit
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.BULLFROG_BOT_PAT }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update dist"
+          file_pattern: 'action/dist/*'    
+          commit_user_name: Bullfrog Bot # defaults to "github-actions[bot]"
+          commit_user_email: bot@bullfrogsec.com # defaults to "41898282+github-actions[bot]@users.noreply.github.com"
+          commit_author: bullfrog-bot <bot@bullfrogsec.com> # defaults to "username <username@users.noreply.github.com>", where "username" belongs to the author of the commit that triggered the run
+
+
   # release:
   #   runs-on: ubuntu-22.04
   #   permissions:
   #     contents: write
   #     pull-requests: write
-  #   needs: build
+  #   needs: [build, audit]
   #   outputs:
   #     release_created: ${{ steps.release.outputs.release_created }}
   #     tag_name: ${{ steps.release.outputs.tag_name }}
@@ -190,7 +215,7 @@ jobs:
   #   permissions:
   #     contents: write
   #     packages: write
-  #   needs: [build, release]
+  #   needs: [build, audit]
   #   # this if statements ensure that a publication only occurs when
   #   # a new release is created:
   #   if: ${{ needs.release.outputs.release_created }}
