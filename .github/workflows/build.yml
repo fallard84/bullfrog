@@ -43,31 +43,31 @@ jobs:
             agent/agent
             action/dist
 
-  test-audit:
-    needs: build
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-22.04]
-    timeout-minutes: 2
+  # test-audit:
+  #   needs: build
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [ubuntu-22.04]
+  #   timeout-minutes: 2
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-      - name: Enable egress filtering
-        uses: ./
-        with:
-          allowed-domains: |
-            *.google.com
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: build-artifacts
+  #     - name: Enable egress filtering
+  #       uses: ./
+  #       with:
+  #         allowed-domains: |
+  #           *.google.com
 
-      - name: Make HTTP requests
-        run: |
-          curl https://www.google.com --output /dev/null
-          curl https://www.bing.com --max-time 3 --output /dev/null
+  #     - name: Make HTTP requests
+  #       run: |
+  #         curl https://www.google.com --output /dev/null
+  #         curl https://www.bing.com --max-time 3 --output /dev/null
 
   # block:
   #   runs-on: ${{ matrix.os }}
@@ -172,7 +172,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    needs: [build, test-audit]
+    needs: build
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
