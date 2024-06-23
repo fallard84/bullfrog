@@ -26,6 +26,9 @@ jobs:
         uses: ./
         with:
           egress-policy: audit
+      - name: Bootstrap
+        run: |
+          make bootstrap
       - name: Build the go agent
         working-directory: ./agent
         run: |
