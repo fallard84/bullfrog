@@ -22,6 +22,8 @@ jobs:
       #     egress-policy: audit
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install deps
+        run: apt-get install libnetfilter-queue-dev
       - name: Build
         run: |
           make bootstrap
