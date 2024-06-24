@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install deps
-        run: apt-get install libnetfilter-queue-dev
+        run: sudo sapt-get install libnetfilter-queue-dev
       - name: Build
         run: |
           make bootstrap
