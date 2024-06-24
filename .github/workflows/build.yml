@@ -9,32 +9,22 @@ on:
   #   branches:
   #     - main
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-22.04
-    timeout-minutes: 2
+    permissions:
+      contents: read
 
     steps:
-      - name: Enable egress filtering
-        uses: bullfrogsec/bullfrog@v0.3
-        with:
-          egress-policy: audit
+      # - name: Enable egress filtering
+      #   uses: bullfrogsec/bullfrog@v0.3
+      #   with:
+      #     egress-policy: audit
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Bootstrap
+      - name: Build
         run: |
           make bootstrap
-      - name: Build the go agent
-        working-directory: ./agent
-        run: |
-          make build
-      - name: Build the action dist
-        working-directory: ./action
-        run: |
           make build
       - uses: actions/upload-artifact@v4
         with:
@@ -42,6 +32,24 @@ jobs:
           path: |
             agent/agent
             action/dist
+  check-dist-diff:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    needs: build
+    steps:
+      # - name: Enable egress filtering
+      #   uses: bullfrogsec/bullfrog@v0.3
+      #   with:
+      #     egress-policy: audit
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+      - name: Check if dist has changed for the action/dist folder
+        run: |
+          git diff --exit-code --quiet action/dist || (echo "action/dist has changed, please commit the changes" && exit 1)
 
   # test-audit:
   #   needs: build
@@ -131,41 +139,45 @@ jobs:
   #         dig example.com
   #         dig www.wikipedia.org
 
-  # docker:
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       os: [ubuntu-22.04, ubuntu-24.04]
-  #   timeout-minutes: 2
+  docker:
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # os: [ubuntu-22.04, ubuntu-24.04]
+        os: [ubuntu-22.04]
+    timeout-minutes: 2
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+      - name: Enable egress filtering
+        uses: ./
+        with:
+          allowed-domains: |
+            production.cloudflare.docker.com
+            docker.io
+            *.docker.io
+            www.google.com
+          egress-policy: block
 
-  #     - name: Enable egress filtering
-  #       uses: ./
-  #       with:
-  #         allowed-domains: |
-  #           production.cloudflare.docker.com
-  #           docker.io
-  #           *.docker.io
-  #           www.google.com
-  #         egress-policy: block
+      - name: Test curl calls within Docker
+        run: |
+          docker run --rm --entrypoint sh alpine/curl:8.7.1 -c "
+            if ! curl https://www.google.com --max-time 5 --output /dev/null; then
+              echo 'Expected curl to www.google.com to succeed, but it failed';
+              exit 1;
+            fi;
 
-  #     - name: Test curl calls within Docker
-  #       run: |
-  #         docker run --rm --entrypoint sh alpine/curl:8.7.1 -c "
-  #           if ! curl https://www.google.com --max-time 5 --output /dev/null; then
-  #             echo 'Expected curl to www.google.com to succeed, but it failed';
-  #             exit 1;
-  #           fi;
-
-  #           if curl https://www.bing.com --max-time 5 --output /dev/null; then
-  #             echo 'Expected curl to www.bing.com to fail, but it succeeded';
-  #             exit 1;
-  #           fi;
-  #         "
+            if curl https://www.bing.com --max-time 5 --output /dev/null; then
+              echo 'Expected curl to www.bing.com to fail, but it succeeded';
+              exit 1;
+            fi;
+          "
 
   release:
     runs-on: ubuntu-22.04
@@ -173,29 +185,19 @@ jobs:
       contents: write
       pull-requests: write
     needs: build
-    outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
-      - name: Enable egress filtering
-        uses: bullfrogsec/bullfrog@v0.3
-        with:
-          egress-policy: audit
+      # - name: Enable egress filtering
+      #   uses: bullfrogsec/bullfrog@v0.3
+      #   with:
+      #     egress-policy: audit
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          token: ${{ secrets.BULLFROG_BOT_PAT }}
+        # with:
+        #   ref: ${{ github.head_ref }}
+        #   token: ${{ secrets.BULLFROG_BOT_PAT }}
       - uses: actions/download-artifact@v4
         with:
           name: build-artifacts
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: update dist"
-          file_pattern: "action/dist/*"
-          commit_user_name: Bullfrog Bot
-          commit_user_email: bot@bullfrogsec.com
-          commit_author: bullfrog-bot <bot@bullfrogsec.com>
       - uses: googleapis/release-please-action@v4
         if: github.event_name == 'push'
         id: release
@@ -204,21 +206,8 @@ jobs:
           # go release type is normally only including changelog, so it's covered
           release-type: node
           target-branch: release
-  publish:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
-      packages: write
-    needs: release
-    # this if statements ensure that a publication only occurs when
-    # a new release is created:
-    if: ${{ needs.release.outputs.release_created }}
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: agent
-          path: agent
       - name: Upload Release Artifact
+        if: ${{ steps.release.outputs.release_created }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ needs.release.outputs.tag_name }} agent
+        run: gh release upload ${{ needs.release.outputs.tag_name }} agent/agent
