@@ -186,7 +186,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    needs: build
+    needs: [build, check-dist-diff]
     steps:
       # - name: Enable egress filtering
       #   uses: bullfrogsec/bullfrog@v0.3
