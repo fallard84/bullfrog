@@ -19123,7 +19123,7 @@ async function _main() {
 }
 async function main() {
   try {
-    console.log("Starting action");
+    console.log("Starting action 2");
     await _main();
   } catch (error) {
     console.error(error);
