@@ -19095,6 +19095,7 @@ async function startAgent({
   ).unref();
 }
 async function _main() {
+  console.log("Starting action");
   const { allowedDomains, allowedIps, dnsPolicy, egressPolicy, logDirectory } = parseInputs();
   const actionDirectory = import_node_path.default.join(__dirname, "..");
   const agentDirectory = import_node_path.default.join(actionDirectory, "..", "agent");
