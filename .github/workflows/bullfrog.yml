@@ -217,7 +217,9 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ steps.release.outputs.tag_name }} agent/agent
+        run: |
+          tar -czf agent.tar.gz agent/agent
+          gh release upload ${{ steps.release.outputs.tag_name }} agent.tar.gz
         # Update major/minor tags for Github Action
         # Ref: https://github.com/googleapis/release-please-action/tree/main?tab=readme-ov-file#creating-majorminor-tags
       - name: Tag major and minor versions for Github Action
