@@ -125,7 +125,7 @@ async function startAgent({
 }
 
 async function _main() {
-  console.log("Starting action");
+  console.log("Starting action...");
   const { allowedDomains, allowedIps, dnsPolicy, egressPolicy, logDirectory } =
     parseInputs();
 
