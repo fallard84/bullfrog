@@ -221,6 +221,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "Upload"
           tar -czf agent.tar.gz agent/agent
           gh release upload ${{ steps.release.outputs.tag_name }} agent.tar.gz
         # Update major/minor tags for Github Action
@@ -255,7 +256,7 @@ jobs:
 
       - uses: jenseng/dynamic-uses@02f544690a931f3967153cd5f14679cfeb61f830
         with:
-          uses: ${{ github.action_repository }}@${{ needs.release.outputs.tag_name }}
+          uses: fallard84/bullfrog@${{ needs.release.outputs.tag_name }}
           with: '{"allowed-domains": "www.google.com", "egress-policy": "block"}'
 
       - name: Make HTTP requests
