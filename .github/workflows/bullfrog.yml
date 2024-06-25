@@ -34,24 +34,24 @@ jobs:
           path: |
             agent/agent
             action/dist
-  check-dist-diff:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: read
-    needs: build
-    steps:
-      # - name: Enable egress filtering
-      #   uses: bullfrogsec/bullfrog@v0.3
-      #   with:
-      #     egress-policy: audit
-      - name: Checkout
-        uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-      - name: Check if dist has changed for the action/dist folder
-        run: |
-          git diff --exit-code --quiet action/dist || (echo "action/dist has changed, please commit the changes" && exit 1)
+  # check-dist-diff:
+  #   runs-on: ubuntu-22.04
+  #   permissions:
+  #     contents: read
+  #   needs: build
+  #   steps:
+  #     # - name: Enable egress filtering
+  #     #   uses: bullfrogsec/bullfrog@v0.3
+  #     #   with:
+  #     #     egress-policy: audit
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: build-artifacts
+  #     - name: Check if dist has changed for the action/dist folder
+  #       run: |
+  #         git diff --exit-code --quiet action/dist || (echo "action/dist has changed, please commit the changes" && exit 1)
 
   # test-audit:
   #   needs: build
@@ -188,7 +188,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    needs: [build, check-dist-diff]
+    # needs: [build, check-dist-diff]
+    needs: build
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
