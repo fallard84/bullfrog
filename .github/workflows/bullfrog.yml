@@ -213,7 +213,7 @@ jobs:
           # we use node release type which will bump the changelog and package.json
           # go release type is normally only including changelog, so it's covered
           release-type: node
-          target-branch: release4
+          default-branch: release4
       - name: Upload Release Artifact
         if: ${{ steps.release.outputs.release_created }}
         env:
