@@ -182,7 +182,8 @@ jobs:
   #         "
 
   release:
-    if: github.ref == 'refs/heads/main'
+    # TODO: replace release by main
+    if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-22.04
     permissions:
       contents: write
