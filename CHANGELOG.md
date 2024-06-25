@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/fallard84/bullfrog/compare/v1.0.1...v1.0.2) (2024-06-25)
+
+
+### Bug Fixes
+
+* Fix dep + add tag for action ([e2040fa](https://github.com/fallard84/bullfrog/commit/e2040fa019b5ba59368da47f65463ea5d67d2aa3))
+
 ## [1.0.1](https://github.com/fallard84/bullfrog/compare/v1.0.0...v1.0.1) (2024-06-24)
 
 
