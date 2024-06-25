@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.3.0](https://github.com/fallard84/bullfrog/compare/v1.2.0...v1.3.0) (2024-06-25)
+
+
+### Features
+
+* adding log ([453ab50](https://github.com/fallard84/bullfrog/commit/453ab5084cfd3674aa1b1a1ebb0268fad9952368))
+* fix validate job ([f9c4bbe](https://github.com/fallard84/bullfrog/commit/f9c4bbec2918ef9f4f9677298f615279dd6e77cb))
+
+
+### Bug Fixes
+
+* add build/release ([791ae7d](https://github.com/fallard84/bullfrog/commit/791ae7d6ef60ffbc93d47afa1cc8f17e3e53c941))
+* adding ... ([8bcc621](https://github.com/fallard84/bullfrog/commit/8bcc621fead4ea9d5d9e82b19b534d43c708ed63))
+* create package.json ([d6e3840](https://github.com/fallard84/bullfrog/commit/d6e3840db98a6b345d37650e71c77695f46c4f75))
+* using release2 + manifest ([3b8ec1c](https://github.com/fallard84/bullfrog/commit/3b8ec1cc4b2b14889f7e35ea87721612400ff910))
+
 ## 1.0.0 (2024-06-25)
 
 
