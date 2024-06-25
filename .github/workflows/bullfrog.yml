@@ -183,7 +183,7 @@ jobs:
 
   release:
     # TODO: replace release by main
-    if: github.ref == 'refs/heads/release'
+    if: github.ref == 'refs/heads/release2'
     runs-on: ubuntu-22.04
     permissions:
       contents: write
@@ -212,7 +212,9 @@ jobs:
           # we use node release type which will bump the changelog and package.json
           # go release type is normally only including changelog, so it's covered
           release-type: node
-          target-branch: release
+          target-branch: release2
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
       - name: Upload Release Artifact
         if: ${{ steps.release.outputs.release_created }}
         env:
