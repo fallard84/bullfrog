@@ -61,10 +61,8 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
       - name: Enable egress filtering
         uses: ./
         with:
@@ -87,7 +85,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
       - name: Enable egress filtering
         uses: ./
@@ -118,14 +116,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
       - name: Enable egress filtering
         uses: ./
         with:
           allowed-domains: |
             *.google.com
-          block-dns: false
+          dns-policy: any
           egress-policy: block
 
       - name: Make HTTP requests
@@ -143,13 +141,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
       - name: Enable egress filtering
         uses: ./
         with:
+          allowed-ips: |
+            172.17.0.0/16
           allowed-domains: |
             production.cloudflare.docker.com
             docker.io
@@ -170,6 +168,12 @@ jobs:
               exit 1;
             fi;
           "
+
+      - name: Nginx
+        run: source test/docker_nginx.sh
+
+      - name: Nginx with port forwarding
+        run: source test/docker_nginx_port_forwarding.sh
 
   release:
     if: github.ref == 'refs/heads/main'
