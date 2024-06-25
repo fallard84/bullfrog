@@ -112,6 +112,7 @@ jobs:
           fi;
 
   test-block-but-allow-any-dns-requests:
+    needs: build
     runs-on: ubuntu-22.04
     timeout-minutes: 2
 
