@@ -13,7 +13,7 @@ jobs:
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
         with:
-          uses: ${{ github.repository }}@$v0.6.1
+          uses: ${{ github.repository }}@v0.6.1
           with: '{"allowed-domains": "www.google.com", "egress-policy": "block"}'
 
       - name: Make HTTP requests
