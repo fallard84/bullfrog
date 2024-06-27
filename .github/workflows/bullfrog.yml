@@ -264,20 +264,20 @@ jobs:
           gh release upload ${{ steps.release.outputs.tag_name }} agent.tar.gz
         # Update major/minor tags for Github Action
         # Ref: https://github.com/googleapis/release-please-action/tree/main?tab=readme-ov-file#creating-majorminor-tags
-      - name: Tag major and minor versions for Github Action
-        if: ${{ steps.release.outputs.release_created }}
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git remote add gh-token "https://${{ secrets.GITHUB_TOKEN }}@github.com/fallard84/bullfrog.git"
-          git tag -d v${{ steps.release.outputs.major }} || true
-          git tag -d v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
-          git push origin :v${{ steps.release.outputs.major }} || true
-          git push origin :v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
-          git tag -a v${{ steps.release.outputs.major }} -m "Release v${{ steps.release.outputs.major }}"
-          git tag -a v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} -m "Release v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}"
-          git push origin v${{ steps.release.outputs.major }}
-          git push origin v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}
+      # - name: Tag major and minor versions for Github Action
+      #   if: ${{ steps.release.outputs.release_created }}
+      #   run: |
+      #     git config user.name github-actions[bot]
+      #     git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      #     git remote add gh-token "https://${{ secrets.GITHUB_TOKEN }}@github.com/fallard84/bullfrog.git"
+      #     git tag -d v${{ steps.release.outputs.major }} || true
+      #     git tag -d v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+      #     git push origin :v${{ steps.release.outputs.major }} || true
+      #     git push origin :v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+      #     git tag -a v${{ steps.release.outputs.major }} -m "Release v${{ steps.release.outputs.major }}"
+      #     git tag -a v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} -m "Release v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}"
+      #     git push origin v${{ steps.release.outputs.major }}
+      #     git push origin v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}
 
   validate-action-in-another-workflow:
     needs: release
@@ -304,3 +304,5 @@ jobs:
             echo 'Expected curl to www.bing.com to fail, but it succeeded';
             exit 1;
           fi;
+
+  # publish release, then update tags, after validation pass
