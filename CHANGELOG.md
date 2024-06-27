@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/fallard84/bullfrog/compare/v0.6.0...v0.6.1) (2024-06-27)
+
+
+### Bug Fixes
+
+* don't dump context ([c890c63](https://github.com/fallard84/bullfrog/commit/c890c631770c3a9513247a391465f1fc5d4fcd52))
+
 ## [0.6.0](https://github.com/fallard84/bullfrog/compare/v0.5.2...v0.6.0) (2024-06-27)
 
 
