@@ -16,8 +16,6 @@ jobs:
       contents: read
 
     steps:
-      - name: dump context
-        run: echo "${{ toJson(github) }}"
       - name: Enable egress filtering
         uses: bullfrogsec/bullfrog@v0
         with:
