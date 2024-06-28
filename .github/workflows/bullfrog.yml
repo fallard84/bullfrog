@@ -299,4 +299,4 @@ jobs:
           git tag -a v${{ needs.pre-release.outputs.major }} -m "Release v${{ needs.pre-release.outputs.major }}"
           git tag -a v${{ needs.pre-release.outputs.major }}.${{ needs.pre-release.outputs.minor }} -m "Release v${{ needs.pre-release.outputs.major }}.${{ needs.pre-release.outputs.minor }}"
           git push origin v${{ needs.pre-release.outputs.major }}
-          git push origin v${{ needs.pre-release.outputs.
+          git push origin v${{ needs.pre-release.outputs.major }}.${{ needs.pre-release.outputs.minor }}
