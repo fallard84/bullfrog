@@ -276,7 +276,7 @@ jobs:
       - uses: jenseng/dynamic-uses@02f544690a931f3967153cd5f14679cfeb61f830
         with:
           uses: ${{ github.repository }}@${{ needs.release.outputs.tag_name }}
-          with: '{"allowed-domains": "www.google.com", "egress-policy": "block"}'
+          with: '{"allowed-domains": "www.google.com", "egress-policy": "block", "agent-download-base-url": "https://github.com/${{ github.repository }}/releases/download/"}'
 
       - name: Make HTTP requests
         run: |
