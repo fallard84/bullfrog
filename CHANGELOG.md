@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.3](https://github.com/fallard84/bullfrog/compare/v0.6.2...v0.6.3) (2024-06-28)
+
+
+### Bug Fixes
+
+* Add release jobs ([ff89ed0](https://github.com/fallard84/bullfrog/commit/ff89ed0eb503aef24b544894d55e3023dd62a564))
+* fixing workflow ([89c2c27](https://github.com/fallard84/bullfrog/commit/89c2c271f0f61e61a331c95c2e932a5bb34d9020))
+
 ## [0.6.2](https://github.com/fallard84/bullfrog/compare/v0.6.1...v0.6.2) (2024-06-28)
 
 
