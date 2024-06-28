@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.6](https://github.com/fallard84/bullfrog/compare/v0.6.5...v0.6.6) (2024-06-28)
+
+
+### Bug Fixes
+
+* output major/minor ([9585601](https://github.com/fallard84/bullfrog/commit/9585601fce2d0cb80cb8f47dfacbe40900e2f33c))
+
 ## [0.6.5](https://github.com/fallard84/bullfrog/compare/v0.6.4...v0.6.5) (2024-06-28)
 
 
