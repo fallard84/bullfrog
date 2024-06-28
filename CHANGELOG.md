@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.5](https://github.com/fallard84/bullfrog/compare/v0.6.4...v0.6.5) (2024-06-28)
+
+
+### Bug Fixes
+
+* checkout ([8a6043f](https://github.com/fallard84/bullfrog/commit/8a6043f0045529a41aa1528aa0b3e935ee3f1420))
+
 ## [0.6.4](https://github.com/fallard84/bullfrog/compare/v0.6.3...v0.6.4) (2024-06-28)
 
 
