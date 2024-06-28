@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.4](https://github.com/fallard84/bullfrog/compare/v0.6.3...v0.6.4) (2024-06-28)
+
+
+### Bug Fixes
+
+* set token ([d2ec119](https://github.com/fallard84/bullfrog/commit/d2ec1198a72af6dbe7484b3abd4c0f25d915b1cf))
+
 ## [0.6.3](https://github.com/fallard84/bullfrog/compare/v0.6.2...v0.6.3) (2024-06-28)
 
 
