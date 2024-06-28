@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://github.com/fallard84/bullfrog/compare/v0.6.1...v0.6.2) (2024-06-28)
+
+
+### Bug Fixes
+
+* trigger release ([124c916](https://github.com/fallard84/bullfrog/commit/124c9167594e7bbb0a4d117511ab159ff344e99c))
+
 ## [0.6.1](https://github.com/fallard84/bullfrog/compare/v0.6.0...v0.6.1) (2024-06-27)
 
 
