@@ -15,6 +15,8 @@ import (
 
 	"github.com/AkihiroSuda/go-netfilter-queue"
 	"github.com/google/gopacket/layers"
+	psutilnet "github.com/shirou/gopsutil/net"
+	"github.com/shirou/gopsutil/process"
 )
 
 var (
@@ -246,6 +248,90 @@ func loadAllowedDNSServers(allowedDNSServers map[string]bool) error {
 	return nil
 }
 
+func getPorts(packet *netfilter.NFPacket) (uint16, uint16, error) {
+	tcpLayer := packet.Packet.Layer(layers.LayerTypeTCP)
+	if tcpLayer != nil {
+		tcp, _ := tcpLayer.(*layers.TCP)
+		if tcp == nil {
+			return 0, 0, fmt.Errorf("Failed to get TCP layer")
+		}
+		return uint16(tcp.SrcPort), uint16(tcp.DstPort), nil
+	}
+
+	udpLayer := packet.Packet.Layer(layers.LayerTypeUDP)
+	if udpLayer != nil {
+		udp, _ := udpLayer.(*layers.UDP)
+		if udp == nil {
+			return 0, 0, fmt.Errorf("Failed to get UDP layer")
+		}
+		return uint16(udp.SrcPort), uint16(udp.DstPort), nil
+	}
+	return 0, 0, fmt.Errorf("Failed to get TCP or UDP layer")
+}
+
+func getProcessByPort(port uint16) ([]*process.Process, error) {
+	connections, err := psutilnet.Connections("inet")
+	if err != nil {
+		return nil, err
+	}
+
+	for _, conn := range connections {
+		if uint16(conn.Laddr.Port) == port {
+			pid := conn.Pid
+			ancestors, err := getAncestorProcesses(pid)
+			if err != nil {
+				return nil, fmt.Errorf("Failed to get ancestor processes: %v\n", err)
+			}
+			var ancestorsProc []*process.Process
+			for _, ancestor := range ancestors {
+				proc, err := process.NewProcess(ancestor)
+				if err != nil {
+					return nil, fmt.Errorf("Failed to get process: %v\n", err)
+				}
+				ancestorsProc = append(ancestorsProc, proc)
+			}
+			return ancestorsProc, nil
+		}
+	}
+
+	return nil, fmt.Errorf("no process found for port %d", port)
+}
+
+func printProcInfo(procs []*process.Process) error {
+	fmt.Printf("ancestor processes:\n")
+	if len(procs) == 0 {
+		return fmt.Errorf("no process found")
+	}
+	for _, proc := range procs {
+
+		cmdline, err := proc.Cmdline()
+		if err != nil {
+			log.Fatalf("Failed to get process command line: %v", err)
+		}
+
+		exe, err := proc.Exe()
+		if err != nil {
+			log.Fatalf("Failed to get process executable: %v", err)
+		}
+
+		cwd, err := proc.Cwd()
+		if err != nil {
+			log.Fatalf("Failed to get process working directory: %v", err)
+		}
+
+		fmt.Printf("\tcmdline: %s, exe: %s, cwd: %s\n", cmdline, exe, cwd)
+	}
+	return nil
+}
+
+func printProcInfoByPort(port uint16) error {
+	procs, err := getProcessByPort(port)
+	if err != nil {
+		return err
+	}
+	return printProcInfo(procs)
+}
+
 func getDestinationIP(packet *netfilter.NFPacket) (string, error) {
 	ipLayer := packet.Packet.Layer(layers.LayerTypeIPv4)
 	if ipLayer == nil {
@@ -338,6 +424,16 @@ func main() {
 			}
 			// if we are blocking DNS queries, intercept the DNS queries and decide whether to block or allow them
 			if blockDNS && !dns.QR {
+				sourcePort, dstPort, err := getPorts(&p)
+				if err != nil {
+					fmt.Printf("Failed to get ports: %v\n", err)
+				}
+				fmt.Printf("Source Port: %d, Destination Port: %d\n", sourcePort, dstPort)
+				err = printProcInfoByPort(sourcePort)
+				if err != nil {
+					fmt.Printf("Failed to get process info: %v\n", err)
+				}
+
 				for _, q := range dns.Questions {
 					if q.Type == layers.DNSTypeA || q.Type == layers.DNSTypeCNAME {
 						domain := string(q.Name)
