@@ -1,0 +1,14 @@
+name: APT Source
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  apt-source:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: |
+          sudo apt-cache policy
