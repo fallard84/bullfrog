@@ -11,8 +11,5 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - run: |
-          sudo apt-cache policy
-          cd /etc/apt/sources.list.d/
-          ls -la
-          cat *
+          sudo cat /etc/apt/apt-mirrors.txt
 
