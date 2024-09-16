@@ -10,7 +10,26 @@ jobs:
   apt-source:
     runs-on: ubuntu-22.04
     steps:
+      - name: Enable egress filtering
+        uses: bullfrogsec/bullfrog@d5dbad144cb435169109225c3cb8ac9d27a3e75a
+        with:
+          egress-policy: block
+          allowed-domains: |
+            *.canonical.com
+            *.github.com
+            *.ubuntu.com
+            archivist.vagrantup.com
+            deb.nodesource.com
+            dl.google.com
+            download.docker.com
+            go.dev
+            objects.githubusercontent.com
+            packages.microsoft.com
+            vagrantcloud-files-production.s3-accelerate.amazonaws.com
+            vagrantcloud.com
+            www.google.com
       - run: |
           sudo apt-get update -o Debug::Acquire::http=true
+          sudo apt-get install --yes vagrant virtualbox -o Debug::Acquire::http=true
 
 
