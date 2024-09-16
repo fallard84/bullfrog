@@ -12,3 +12,7 @@ jobs:
     steps:
       - run: |
           sudo apt-cache policy
+          cd /etc/apt/sources.list.d/
+          ls -la
+          cat *
+
