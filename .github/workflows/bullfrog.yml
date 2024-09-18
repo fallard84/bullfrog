@@ -261,6 +261,10 @@ jobs:
             vagrantcloud.com
             www.google.com
 
+      - name: Capture DNS requests for troubleshooting
+        run: |
+          sudo tcpdump -i any -w /tmp/dns.pcap -s 0 port 53 &
+
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
@@ -278,6 +282,14 @@ jobs:
 
       - name: Run Tests
         run: make test.integration
+
+      - name: Upload tcpdump artifact
+        if: always()
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: tcpdump
+          path: /tmp/dns.pcap
+
 
   # TODO: Rename to something else since it runs test.lint and test.types
   test-lint:
