@@ -66,29 +66,29 @@ jobs:
             agent/agent
             action/dist
 
-  # check-artifacts:
-  #   needs: build
-  #   runs-on: ubuntu-22.04
-  #   timeout-minutes: 5
+  check-artifacts:
+    needs: build
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
 
-  #   steps:
-  #     - name: Enable egress filtering
-  #       uses: bullfrogsec/bullfrog@d5dbad144cb435169109225c3cb8ac9d27a3e75a
-  #       with:
-  #         egress-policy: block
-  #         allowed-domains: |
-  #           *.github.com
+    steps:
+      - name: Enable egress filtering
+        uses: bullfrogsec/bullfrog@d5dbad144cb435169109225c3cb8ac9d27a3e75a
+        with:
+          egress-policy: block
+          allowed-domains: |
+            *.github.com
 
-  #     - name: Checkout
-  #       uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
-  #     - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
-  #       with:
-  #         name: build-artifacts
+      - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: build-artifacts
 
-  #     - name: Check Artifact Build
-  #       run: |
-  #         make test.artifacts
+      - name: Check Artifact Build
+        run: |
+          make test.artifacts
 
   # test-audit:
   #   needs: build
