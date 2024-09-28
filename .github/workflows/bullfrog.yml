@@ -232,7 +232,7 @@ jobs:
 
   test-integration:
     needs: build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
 
     steps:
@@ -254,10 +254,7 @@ jobs:
             vagrantcloud-files-production.s3-accelerate.amazonaws.com
             vagrantcloud.com
             www.google.com
-
-      - name: Capture DNS requests for troubleshooting
-        run: |
-          sudo tcpdump -i any -w /tmp/dns.pcap -s 0 port 53 &
+            apt.releases.hashicorp.com
 
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -268,8 +265,10 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo resolvectl flush-caches
-          sudo apt-get update
+          sudo resolvectl flush-caches # TODO: Remove flush-caches after the fix is released
+          wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          sudo apt update
           sudo apt-get install --yes vagrant virtualbox
 
       - name: Start VM
@@ -277,14 +276,6 @@ jobs:
 
       - name: Run Tests
         run: make test.integration
-
-      - name: Upload tcpdump artifact
-        if: always()
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
-        with:
-          name: tcpdump
-          path: /tmp/dns.pcap
-
 
   # TODO: Rename to something else since it runs test.lint and test.types
   # test-lint:
