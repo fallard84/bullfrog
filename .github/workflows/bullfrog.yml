@@ -239,7 +239,7 @@ jobs:
       - name: Enable egress filtering
         uses: bullfrogsec/bullfrog@d5dbad144cb435169109225c3cb8ac9d27a3e75a
         with:
-          egress-policy: block
+          egress-policy: audit
           allowed-domains: |
             *.canonical.com
             *.github.com
@@ -254,7 +254,7 @@ jobs:
             vagrantcloud-files-production.s3-accelerate.amazonaws.com
             vagrantcloud.com
             www.google.com
-            apt.releases.hashicorp.com
+            *.hashicorp.com
 
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
