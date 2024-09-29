@@ -16,6 +16,7 @@ jobs:
         uses: fallard84/bullfrog@0bfa75d3baba0f027e405a9984db637d0ae53ffa
         with:
           egress-policy: block
+          dns-policy: any
           _agent-download-base-url: "https://github.com/${{ github.repository }}/releases/download/"
           allowed-domains: |
             github.com
