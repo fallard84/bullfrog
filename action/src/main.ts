@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import cache from "@actions/cache"
+import cache from "@actions/cache";
 import { getCacheEntry } from "@actions/cache/lib/internal/cacheHttpClient";
 import fs from "node:fs/promises";
 import util from "node:util";
@@ -244,15 +244,15 @@ async function verifyAgent({ agentDirectory }: { agentDirectory: string }) {
 }
 
 async function getAzureCacheHostname(): Promise<string | null> {
-  const dummyCachePath = path.join(__dirname, "cache.dummy")
-  await cache.saveCache([dummyCachePath], "bullfrog")
-  const cacheEntry = await getCacheEntry(["bullfrog"], [dummyCachePath])
+  const dummyCachePath = path.join(__dirname, "cache.dummy");
+  await cache.saveCache([dummyCachePath], "bullfrog");
+  const cacheEntry = await getCacheEntry(["bullfrog"], [dummyCachePath]);
   if (cacheEntry && cacheEntry.archiveLocation) {
-    const cacheHostname = new URL(cacheEntry?.archiveLocation).hostname
-    core.info(`Cache hostname: ${cacheHostname}`)
-    return cacheHostname
+    const cacheHostname = new URL(cacheEntry?.archiveLocation).hostname;
+    core.info(`Cache hostname: ${cacheHostname}`);
+    return cacheHostname;
   }
-  return null
+  return null;
 }
 
 async function main() {
@@ -294,9 +294,9 @@ async function main() {
     agentDownloadBaseURL,
   });
 
-  const azureCacheHostname = await getAzureCacheHostname()
+  const azureCacheHostname = await getAzureCacheHostname();
   if (azureCacheHostname) {
-    allowedDomains.push(azureCacheHostname)
+    allowedDomains.push(azureCacheHostname);
   }
 
   await startAgent({
