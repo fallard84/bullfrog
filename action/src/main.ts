@@ -247,9 +247,11 @@ async function getAzureCacheHostname(): Promise<string | null> {
   const dummyCachePath = path.join(__dirname, "cache.dummy");
   await cache.saveCache([dummyCachePath], "bullfrog");
   const cacheEntry = await getCacheEntry(["bullfrog"], [dummyCachePath]);
+  console.log(JSON.stringify(cacheEntry));
   if (cacheEntry && cacheEntry.archiveLocation) {
     const cacheHostname = new URL(cacheEntry?.archiveLocation).hostname;
     core.info(`Cache hostname: ${cacheHostname}`);
+    console.log(`Cache hostname: ${cacheHostname}`);
     return cacheHostname;
   }
   return null;

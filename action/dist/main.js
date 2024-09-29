@@ -59157,9 +59157,11 @@ async function getAzureCacheHostname() {
   const dummyCachePath = import_node_path.default.join(__dirname, "cache.dummy");
   await cache.saveCache([dummyCachePath], "bullfrog");
   const cacheEntry = await (0, import_cacheHttpClient.getCacheEntry)(["bullfrog"], [dummyCachePath]);
+  console.log(JSON.stringify(cacheEntry));
   if (cacheEntry && cacheEntry.archiveLocation) {
     const cacheHostname = new URL(cacheEntry?.archiveLocation).hostname;
     core3.info(`Cache hostname: ${cacheHostname}`);
+    console.log(`Cache hostname: ${cacheHostname}`);
     return cacheHostname;
   }
   return null;
