@@ -129,6 +129,12 @@ jobs:
           timeout 5 curl https://www.google.com --output /dev/null
           timeout 5 curl https://www.bing.com --output /dev/null
 
+      - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: readme
+          path: |
+            README.md
+
   test-block:
     needs: build
     runs-on: ${{ matrix.os }}

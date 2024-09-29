@@ -1,4 +1,6 @@
 import * as core from "@actions/core";
+import cache from "@actions/cache"
+import { getCacheEntry } from "@actions/cache/lib/internal/cacheHttpClient";
 import fs from "node:fs/promises";
 import util from "node:util";
 import { exec as execCb, spawn, spawnSync } from "node:child_process";
@@ -241,6 +243,18 @@ async function verifyAgent({ agentDirectory }: { agentDirectory: string }) {
   });
 }
 
+async function getAzureCacheHostname(): Promise<string | null> {
+  const dummyCachePath = path.join(__dirname, "cache.dummy")
+  await cache.saveCache([dummyCachePath], "bullfrog")
+  const cacheEntry = await getCacheEntry(["bullfrog"], [dummyCachePath])
+  if (cacheEntry && cacheEntry.archiveLocation) {
+    const cacheHostname = new URL(cacheEntry?.archiveLocation).hostname
+    core.info(`Cache hostname: ${cacheHostname}`)
+    return cacheHostname
+  }
+  return null
+}
+
 async function main() {
   const {
     agentDownloadBaseURL,
@@ -279,6 +293,11 @@ async function main() {
     version: pkg.version,
     agentDownloadBaseURL,
   });
+
+  const azureCacheHostname = await getAzureCacheHostname()
+  if (azureCacheHostname) {
+    allowedDomains.push(azureCacheHostname)
+  }
 
   await startAgent({
     agentLogFilepath,
