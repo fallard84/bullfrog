@@ -58403,7 +58403,7 @@ Other caches with similar key:`);
         }));
       });
     }
-    function saveCache(cacheId, archivePath, options) {
+    function saveCache2(cacheId, archivePath, options) {
       return __awaiter2(this, void 0, void 0, function* () {
         const httpClient = createHttpClient();
         core4.debug("Upload cache");
@@ -58418,7 +58418,7 @@ Other caches with similar key:`);
         core4.info("Cache saved successfully");
       });
     }
-    exports2.saveCache = saveCache;
+    exports2.saveCache = saveCache2;
   }
 });
 
@@ -58820,7 +58820,7 @@ var require_cache2 = __commonJS({
       });
     }
     exports2.restoreCache = restoreCache;
-    function saveCache(paths, key, options, enableCrossOsArchive = false) {
+    function saveCache2(paths, key, options, enableCrossOsArchive = false) {
       var _a, _b, _c, _d, _e;
       return __awaiter2(this, void 0, void 0, function* () {
         checkPaths(paths);
@@ -58881,13 +58881,13 @@ var require_cache2 = __commonJS({
         return cacheId;
       });
     }
-    exports2.saveCache = saveCache;
+    exports2.saveCache = saveCache2;
   }
 });
 
 // src/main.ts
 var core3 = __toESM(require_core());
-var import_cache = __toESM(require_cache2());
+var cache = __toESM(require_cache2());
 var import_cacheHttpClient = __toESM(require_cacheHttpClient());
 var import_promises3 = __toESM(require("node:fs/promises"));
 var import_node_util = __toESM(require("node:util"));
@@ -59155,7 +59155,7 @@ async function verifyAgent({ agentDirectory }) {
 }
 async function getAzureCacheHostname() {
   const dummyCachePath = import_node_path.default.join(__dirname, "cache.dummy");
-  await import_cache.default.saveCache([dummyCachePath], "bullfrog");
+  await cache.saveCache([dummyCachePath], "bullfrog");
   const cacheEntry = await (0, import_cacheHttpClient.getCacheEntry)(["bullfrog"], [dummyCachePath]);
   if (cacheEntry && cacheEntry.archiveLocation) {
     const cacheHostname = new URL(cacheEntry?.archiveLocation).hostname;

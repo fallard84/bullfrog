@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import cache from "@actions/cache";
+import * as cache from "@actions/cache";
 import { getCacheEntry } from "@actions/cache/lib/internal/cacheHttpClient";
 import fs from "node:fs/promises";
 import util from "node:util";
