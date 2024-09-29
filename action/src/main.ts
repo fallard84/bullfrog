@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import * as cache from "@actions/cache";
 import { getCacheEntry } from "@actions/cache/lib/internal/cacheHttpClient";
+import { getCompressionMethod } from "@actions/cache/lib/internal/cacheUtils";
 import fs from "node:fs/promises";
 import util from "node:util";
 import { exec as execCb, spawn, spawnSync } from "node:child_process";
@@ -246,7 +247,8 @@ async function verifyAgent({ agentDirectory }: { agentDirectory: string }) {
 async function getAzureCacheHostname(): Promise<string | null> {
   const dummyCachePath = path.join(__dirname, "cache.dummy");
   await cache.saveCache([dummyCachePath], "bullfrog");
-  const cacheEntry = await getCacheEntry(["bullfrog"], [dummyCachePath]);
+  const compressionMethod = await getCompressionMethod();
+  const cacheEntry = await getCacheEntry(["bullfrog"], [dummyCachePath], { compressionMethod });
   console.log(JSON.stringify(cacheEntry));
   if (cacheEntry && cacheEntry.archiveLocation) {
     const cacheHostname = new URL(cacheEntry?.archiveLocation).hostname;

@@ -23215,7 +23215,7 @@ var require_cacheUtils = __commonJS({
         return versionOutput;
       });
     }
-    function getCompressionMethod() {
+    function getCompressionMethod2() {
       return __awaiter2(this, void 0, void 0, function* () {
         const versionOutput = yield getVersion("zstd", ["--quiet"]);
         const version2 = semver.clean(versionOutput);
@@ -23227,7 +23227,7 @@ var require_cacheUtils = __commonJS({
         }
       });
     }
-    exports2.getCompressionMethod = getCompressionMethod;
+    exports2.getCompressionMethod = getCompressionMethod2;
     function getCacheFileName(compressionMethod) {
       return compressionMethod === constants_1.CompressionMethod.Gzip ? constants_1.CacheFilename.Gzip : constants_1.CacheFilename.Zstd;
     }
@@ -58889,6 +58889,7 @@ var require_cache2 = __commonJS({
 var core3 = __toESM(require_core());
 var cache = __toESM(require_cache2());
 var import_cacheHttpClient = __toESM(require_cacheHttpClient());
+var import_cacheUtils = __toESM(require_cacheUtils());
 var import_promises3 = __toESM(require("node:fs/promises"));
 var import_node_util = __toESM(require("node:util"));
 var import_node_child_process = require("node:child_process");
@@ -59156,7 +59157,8 @@ async function verifyAgent({ agentDirectory }) {
 async function getAzureCacheHostname() {
   const dummyCachePath = import_node_path.default.join(__dirname, "cache.dummy");
   await cache.saveCache([dummyCachePath], "bullfrog");
-  const cacheEntry = await (0, import_cacheHttpClient.getCacheEntry)(["bullfrog"], [dummyCachePath]);
+  const compressionMethod = await (0, import_cacheUtils.getCompressionMethod)();
+  const cacheEntry = await (0, import_cacheHttpClient.getCacheEntry)(["bullfrog"], [dummyCachePath], { compressionMethod });
   console.log(JSON.stringify(cacheEntry));
   if (cacheEntry && cacheEntry.archiveLocation) {
     const cacheHostname = new URL(cacheEntry?.archiveLocation).hostname;
