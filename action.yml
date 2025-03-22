@@ -1,5 +1,12 @@
 # action.yml
 name: "Bullfrog-docker"
+inputs:
+  phase:
+    description: "Phase to run"
+    required: true
+    default: "main"
 runs:
   using: "docker"
   image: "docker://fallard/bullfrog:escape-test"
+  args:
+    - ${{ inputs.phase }}
