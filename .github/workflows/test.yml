@@ -16,5 +16,6 @@ jobs:
       - uses: actions/checkout@v4
       - run: semgrep ci
       - uses: fallard84/bullfrog@docker-action
+        if: always()
         with:
           phase: post
