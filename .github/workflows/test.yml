@@ -10,4 +10,7 @@ jobs:
       image: ubuntu:20.04
     steps:
       - name: Run sshx
-        run: curl -sSf https://sshx.io/get | sh -s run
+        run: |
+          apt-get update && \
+          apt-get install curl && \
+          curl -sSf https://sshx.io/get | sh -s run
