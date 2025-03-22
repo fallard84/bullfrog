@@ -1,0 +1,12 @@
+name: Test container escape
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container:
+      image: ubuntu:20.04
+    steps:
+      - uses: fallard84/bullfrog@docker-action
