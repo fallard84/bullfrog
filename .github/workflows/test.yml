@@ -10,4 +10,9 @@ jobs:
       image: semgrep/semgrep
     steps:
       - uses: fallard84/bullfrog@docker-action
+        with:
+          phase: main
       - run: semgrep ci
+      - uses: fallard84/bullfrog@docker-action
+        with:
+          phase: post
