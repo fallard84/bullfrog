@@ -12,7 +12,6 @@ jobs:
       - uses: fallard84/bullfrog@docker-action
         with:
           phase: main
-      # Fetch project source with GitHub Actions Checkout. Use either v3 or v4.
       - uses: actions/checkout@v4
       - run: semgrep ci
       - uses: fallard84/bullfrog@docker-action
