@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
-      image: ubuntu:20.04
+      image: semgrep/semgrep
     steps:
       - uses: fallard84/bullfrog@docker-action
+      - run: semgrep ci
